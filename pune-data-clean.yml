@@ -1,0 +1,171 @@
+# Pune data — CLEANED canonical dataset
+# Built by verifying pune-open-data.md item by item. Each metric records:
+#   value, unit, as_of, source, confidence (high|medium|low), note
+# confidence: high = official/cross-confirmed; medium = single reputable source;
+#             low = third-party / conflicting / needs official confirmation.
+# Status of each item tracked in the cleaning log at the bottom.
+
+meta:
+  city: Pune
+  last_cleaned: "2026-06-20"
+
+metrics:
+  budget:
+    current:
+      value: 13995
+      unit: "INR crore"
+      as_of: "2026-27"
+      source: "PMC Budget 2026-27 (presented 9 Mar 2026, Commissioner N.K. Ram); Punekar News / Pune Pulse / Free Press Journal; OpenCity PMC Budgets"
+      confidence: high
+      note: "Highest allocations: Water Supply ₹2,077 Cr; Roads ₹1,866 Cr; Solid Waste ₹1,390 Cr. Salaries ₹3,881.70 Cr; capital/development ₹5,773.54 Cr."
+    trend:
+      unit: "INR crore"
+      series:
+        - { fy: "2021-22", value: 7650 }
+        - { fy: "2022-23", value: 8592 }
+        - { fy: "2023-24", value: 9515 }
+        - { fy: "2024-25", value: 11601 }
+        - { fy: "2025-26", value: 12618 }
+        - { fy: "2026-27", value: 13995 }
+      confidence: high
+      note: "Resolved earlier year-label conflict: ₹11,601=24-25, ₹12,618=25-26, ₹13,995=26-27 (current FY)."
+
+  air_quality:
+    live_source:
+      source: "CPCB National AQI portal (airquality.cpcb.gov.in) + SAFAR (IITM/IMD)"
+      confidence: high
+      note: "Use official live feed for current AQI. Dashboard sample values are illustrative only."
+    stations:
+      value: "~10 SAFAR localities + CPCB CAAQMS"
+      confidence: medium
+      note: "SAFAR hourly 2017-23 covered ~10 stations (OpenCity). Named: Shivajinagar, Pashan, Karve Rd, Katraj, Lohegaon, Hadapsar (+others). A CPCB CAAQMS added Jul 2024. Exact current count unconfirmed."
+    annual_trend:
+      confidence: low
+      note: "Earlier trend (AQI 63→135, 2020-26) is from aqi.in (third-party) — DO NOT present as official. Clean fix: compute annual averages from OpenCity official hourly AQI 2017-23, or cite CPCB."
+
+  water_supply:
+    value: 866
+    unit: "MLD (effective, post-leakage)"
+    as_of: "2024"
+    source: "PMC Water Supply / CSE"
+    confidence: medium
+    note: "Effective supply after network losses. Gross abstraction from dams is higher; definitional — verify against PMC water dept figure."
+  sewage_treatment:
+    existing_capacity: { value: 477, unit: "MLD" }
+    added_by_jica: { value: 396, unit: "MLD" }
+    target_total: { value: 873, unit: "MLD" }
+    as_of: "2026"
+    source: "PMC PARMM project page (pmc.gov.in/en/b/parmm-project); Punekar News"
+    confidence: high
+    note: "CORRECTED from earlier 576/895/1,125 noise. 11 STPs under JICA-funded PARMM; ~5 commissioned by end-Jun 2026, full completion extended to Dec 2026. Treatment gap vs ~866 MLD supply is the river-pollution story."
+
+  smart_city:
+    projects: { value: 55, unit: "projects" }
+    value: { value: 3333.07, unit: "INR crore" }
+    completion: { value: 100, unit: "percent" }
+    as_of: "2025 (mission concluded 31 Mar 2025)"
+    source: "PSCDCL / Smart Cities Mission (Punekar News)"
+    confidence: high
+    note: "CLEANED — 55 projects / ₹3,333.07 Cr / 100% is PUNE. The earlier sector breakdown (e.g. 75/85 mobility) was MAHARASHTRA-wide and has been dropped to avoid misattribution."
+
+  area:
+    value: 516.18
+    unit: "sq km"
+    as_of: "2021"
+    source: "Maharashtra Govt notification 30 Jun 2021 (Punekar News, Deccan Herald, Construction World)"
+    confidence: high
+    note: "CORRECTED — full picture: 11 villages merged 2017 + 23 villages merged 30 Jun 2021 = 516.18 sq km. PMC became Maharashtra's largest municipality by area (BMC ~440). Earlier '+81 km²/11 villages' was only the 2017 batch."
+  population:
+    value: 4570000
+    unit: "persons (approx, city)"
+    as_of: "2025 (estimate)"
+    source: "population estimates; Census 2011 = 3.12M (pre-merger)"
+    confidence: low
+    note: "Post-merger population estimates vary widely (~46–73 lakh cited). Treat as approximate; no official post-2011 census. literacy ~86% (Census 2011)."
+  ward_divisions:
+    value: 15
+    unit: "administrative divisions / ward offices"
+    confidence: medium
+    note: "15 regional ward offices (kshetriya karyalay). Distinct from electoral prabhags. verify if restructured for 2026 election."
+
+  trees:
+    total: { value: 4090000, unit: "trees" }
+    species: { value: 427, unit: "species" }
+    as_of: "2019"
+    source: "PMC GIS Tree Census 2019; OpenCity 'Pune Tree Census 2019'"
+    confidence: high
+    note: "Top 3 species = 47% (Giripushpa, Subabul, African Blackwood; non-native). Ward 53/Taljai = 7.71 lakh, Ward 20/ARAI = 2.24 lakh, median ward ~23k. NOTE: ward numbers are old electoral prabhags, not the 15 offices. Per-tree geo-located."
+
+  solid_waste:
+    generation: { value: "2,015–2,258", unit: "TPD (varies by source/year)" }
+    segregation: { value: 95, unit: "percent (via SWaCH)" }
+    as_of: "2024-25"
+    source: "PMC SWM; SWaCH cooperative (CSE); OpenCity 'Pune Solid Waste Management Data'"
+    confidence: medium
+    note: "2025: 2,015 MTD (dry 783 / wet 699); other reports ~2,258 TPD. ~87.5% collected; SWaCH diverts ~227 TPD from landfill. Use OpenCity SWM dataset as canonical."
+
+  property_tax:
+    collected: { value: 2365.31, unit: "INR crore" }
+    target: { value: 2847.23, unit: "INR crore" }
+    properties: { value: 1250000, unit: "properties (~12.5 lakh)" }
+    as_of: "2024-25"
+    source: "PMC Property Tax Dept (Free Press Journal)"
+    confidence: high
+    note: "~83% of target; prev year ₹2,273 Cr. Portal: propertytax.punecorporation.org."
+
+  transport:
+    metro:
+      length: { value: 32.97, unit: "km" }
+      stations: { value: 28 }
+      daily_ridership: { value: 221429, unit: "avg daily (Oct 2025)" }
+      confidence: high
+      note: "2 lines (Purple PCMC Bhawan–Swargate; Aqua Vanaz–Ramwadi). FY25-26 total 7.08 cr riders, ₹110 Cr revenue. Line 3 + 44 stations under construction."
+    pmpml:
+      fleet: { value: 1584, unit: "buses" }
+      daily_ridership: { value: "12-13.5 lakh" }
+      confidence: medium
+      note: "+2,500 new buses planned by Apr-May 2026."
+
+  dams:
+    cluster_capacity: { value: 29.15, unit: "TMC (Khadakwasla cluster live storage)" }
+    confidence: high
+    current_level:
+      value: 14.2
+      unit: "percent (≈4.13 TMC)"
+      as_of: "Jun 2026 (pre-monsoon)"
+      confidence: medium
+      note: "LIVE / varies daily — fetch from official PMC dam-status page (pmc.gov.in/en/b/current-status-dams-pune-region-2025) at use-time. Cluster = Khadakwasla+Panshet+Varasgaon+Temghar."
+
+  flood_risk:
+    areas: ["Sinhagad Rd / Ekta Nagar", "Bavdhan", "Baner", "Deccan Gymkhana"]
+    confidence: medium
+    note: "Low-lying along the Mutha; driven by Khadakwasla releases + heavy rain. 2024: 150+ homes; 2019 Ambil Odha 19+ deaths. Blue flood line = 25-yr level (re-survey planned). Qualitative — exact flood-line GIS to be sourced from irrigation dept."
+
+  road_safety:
+    accidents_2024: { value: 1404 }
+    deaths_2024: { value: 320 }
+    deaths_2023: { value: 351 }
+    confidence: medium
+    note: "2025 fatalities dipped (Pune Police road-safety report). 'Black spots' list maintained by traffic police; exact junctions not openly mapped."
+
+  facilities:
+    dispensaries: { value: 28 }
+    gardens: { value: 168 }
+    high_schools: { value: 40, note: "PMC-run secondary; + NGO-run; many primary schools too" }
+    confidence: medium
+    note: "Counts from PMC pages/search; full lists via OpenCity (schools, healthcare) + PMC Open Data Store. Hospitals/toilets/fire-stations counts: verify."
+
+cleaning_log:
+  - "budget: CORRECTED — current FY is 2026-27 at ₹13,995 Cr (was showing 2025-26 ₹12,618). Year-label conflict resolved; full 6-year trend confirmed. confidence high."
+  - "air_quality: FLAGGED — annual trend was third-party (aqi.in), demoted to low confidence; live AQI to come from official CPCB/SAFAR; station count ~10 (medium)."
+  - "water_sewage: CORRECTED — sewage existing 477 MLD +396 (JICA) = 873 MLD target (was 576/895/1,125). Official PMC PARMM page found. Water 866 MLD effective (medium)."
+  - "smart_city: CLEANED — confirmed 55 projects/₹3,333.07 Cr/100% is Pune; dropped the Maharashtra-wide sector breakdown that was mis-scoped. confidence high."
+  - "area: CORRECTED — 516.18 sq km (2017: 11 villages + 2021: 23 villages); earlier '+81 km²' was only 2017 batch. confidence high."
+  - "population: FLAGGED low — ~4.57M (2025 est) but post-merger estimates vary widely; no official census since 2011 (3.12M)."
+  - "ward_divisions: 15 (medium) — verify if restructured for 2026 polls."
+  - "trees: VERIFIED high — totals/species/top-3/ward hotspots confirmed; ward numbering caveat noted."
+  - "solid_waste: CLARIFIED medium — generation 2,015–2,258 TPD (source/year variance); 95% segregation via SWaCH; OpenCity SWM dataset canonical."
+  - "property_tax: VERIFIED high — ₹2,365.31 Cr collected vs ₹2,847.23 Cr target; 12.5 lakh properties."
+  - "transport: VERIFIED — Metro 32.97 km/28 stations (high); PMPML 1,584 buses (medium)."
+  - "dams: cluster capacity 29.15 TMC (high); current % is LIVE/variable — pull from official PMC dam page (medium)."
+  - "flood_risk / road_safety / facilities: CANONICALIZED medium — qualitative/single-source; verify GIS + exact counts before publishing."

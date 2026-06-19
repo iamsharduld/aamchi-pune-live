@@ -172,7 +172,7 @@
     <p class="sub"><span class="lang-en">Pune's most pressing number right now — and the river-pollution gap.</span><span class="lang-mr">सध्याचा सर्वात महत्त्वाचा आकडा — आणि नदी-प्रदूषणाची तफावत.</span></p>
     <div class="grid two">
       <div class="card">
-        <h3><span class="lang-en">Dam storage</span><span class="lang-mr">धरण साठा</span> <span class="tag-live">live</span></h3>
+        <h3><span class="lang-en">Dam storage</span><span class="lang-mr">धरण साठा</span> <span class="tag-live" style="background:#fbf3da;color:#8a6d00;border-color:#e6cf8a">as of Jun 2026</span></h3>
         <p class="cap"><span class="lang-en">Khadakwasla cluster (Khadakwasla+Panshet+Varasgaon+Temghar), Jun 2026</span><span class="lang-mr">खडकवासला समूह, जून २०२६</span></p>
         <div class="ringwrap">
           <div class="ring" style="--pct:14;--c:var(--red);--track:#f6e2df"><span class="rv" style="color:var(--red)">14%</span></div>
@@ -231,7 +231,7 @@
     <div class="maptabs">
       <button id="t-aqi" aria-pressed="true"><span class="lang-en">🌫️ Air quality</span><span class="lang-mr">🌫️ हवा</span></button>
       <button id="t-flood" aria-pressed="false"><span class="lang-en">🌊 Flood-prone</span><span class="lang-mr">🌊 पूरप्रवण</span></button>
-      <span class="tag-live" style="align-self:center"><span class="lang-en">AQI: sample · live-ready</span><span class="lang-mr">AQI: नमुना</span></span>
+      <span class="tag-live" id="aqi-status" style="align-self:center">AQI · connecting…</span>
     </div>
     <div id="map"></div>
     <div class="legend" id="legend"></div>
@@ -314,9 +314,10 @@
   var sv="en";try{sv=localStorage.getItem("apl-lang")||"en"}catch(e){}setLang(sv);
 
   function aqiColor(v){if(v<=50)return"#2e9e5b";if(v<=100)return"#a3c83a";if(v<=200)return"#e8b117";if(v<=300)return"#e2590b";if(v<=400)return"#c0392b";return"#7e2a1c"}
-  var aqi=[{n:"Shivajinagar",mr:"शिवाजीनगर",lat:18.530,lng:73.852,v:142},{n:"Pashan",mr:"पाषाण",lat:18.538,lng:73.806,v:88},
-    {n:"Karve Road",mr:"कर्वे रस्ता",lat:18.503,lng:73.812,v:118},{n:"Katraj",mr:"कात्रज",lat:18.448,lng:73.858,v:96},
-    {n:"Lohegaon",mr:"लोहगाव",lat:18.582,lng:73.915,v:158},{n:"Hadapsar",mr:"हडपसर",lat:18.500,lng:73.941,v:134}];
+  // Fallback AQI localities (used only if the live feed is unavailable).
+  var aqiFallback=[{name:"Shivajinagar",lat:18.530,lng:73.852,aqi:142},{name:"Pashan",lat:18.538,lng:73.806,aqi:88},
+    {name:"Karve Road",lat:18.503,lng:73.812,aqi:118},{name:"Katraj",lat:18.448,lng:73.858,aqi:96},
+    {name:"Lohegaon",lat:18.582,lng:73.915,aqi:158},{name:"Hadapsar",lat:18.500,lng:73.941,aqi:134}];
   var flood=[{n:"Ekta Nagar (Sinhagad Rd)",mr:"एकता नगर",lat:18.470,lng:73.823},{n:"Bavdhan",mr:"बावधन",lat:18.516,lng:73.775},
     {n:"Baner",mr:"बाणेर",lat:18.559,lng:73.785},{n:"Deccan Gymkhana",mr:"डेक्कन",lat:18.516,lng:73.841}];
 
@@ -324,12 +325,42 @@
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
   function isMr(){return document.documentElement.getAttribute("lang")==="mr"}
 
-  var aqiLayer=L.layerGroup(), floodLayer=L.layerGroup();
-  aqi.forEach(function(s){var m=L.circleMarker([s.lat,s.lng],{radius:13,color:"#fff",weight:2,fillColor:aqiColor(s.v),fillOpacity:.92});
-    m.bindPopup("<b>"+(isMr()?s.mr:s.n)+"</b><br>AQI <b style='color:"+aqiColor(s.v)+"'>"+s.v+"</b> <small style='color:#888'>("+(isMr()?"नमुना":"sample")+")</small>");
-    m.bindTooltip(""+s.v,{permanent:true,direction:"center",className:"aqi-tt"});aqiLayer.addLayer(m)});
+  var aqiLayer=L.layerGroup().addTo(map), floodLayer=L.layerGroup();
+
+  // CPCB India-AQI sub-index breakpoints [Clow,Chigh,Ilow,Ihigh]
+  var BP={"PM2.5":[[0,30,0,50],[30,60,51,100],[60,90,101,200],[90,120,201,300],[120,250,301,400],[250,500,401,500]],
+    "PM10":[[0,50,0,50],[50,100,51,100],[100,250,101,200],[250,350,201,300],[350,430,301,400],[430,600,401,500]],
+    "NO2":[[0,40,0,50],[40,80,51,100],[80,180,101,200],[180,280,201,300],[280,400,301,400],[400,1000,401,500]],
+    "OZONE":[[0,50,0,50],[50,100,51,100],[100,168,101,200],[168,208,201,300],[208,748,301,400],[748,1000,401,500]]};
+  function subIndex(p,c){var t=BP[p];if(!t||c==null||isNaN(c))return null;for(var i=0;i<t.length;i++){var b=t[i];if(c>=b[0]&&c<=b[1])return Math.round((b[3]-b[2])/(b[1]-b[0])*(c-b[0])+b[2]);}return c>t[t.length-1][1]?500:null;}
+
+  function renderAQI(list,live){
+    aqiLayer.clearLayers();
+    list.forEach(function(s){
+      var m=L.circleMarker([s.lat,s.lng],{radius:13,color:"#fff",weight:2,fillColor:aqiColor(s.aqi),fillOpacity:.92});
+      var extra=live?("<br>"+(s.dom?("dominant: "+s.dom):"")+(s.upd?"<br><small style='color:#888'>"+s.upd+"</small>":"")+"<br><small style='color:#0c7a6e'>● live · CPCB / data.gov.in</small>"):("<br><small style='color:#888'>("+(isMr()?"नमुना":"sample")+")</small>");
+      m.bindPopup("<b>"+s.name+"</b><br>AQI <b style='color:"+aqiColor(s.aqi)+"'>"+s.aqi+"</b>"+extra);
+      m.bindTooltip(""+s.aqi,{permanent:true,direction:"center",className:"aqi-tt"});
+      aqiLayer.addLayer(m);
+    });
+    var st=document.getElementById("aqi-status");
+    if(st){st.textContent=live?("AQI · LIVE — CPCB, "+list.length+" stations"):"AQI · sample (live feed offline)";st.style.color=live?"#0c7a6e":"#8a6d00";}
+  }
+
+  var AQI_API="https://api.data.gov.in/resource/3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=json&limit=200&filters%5Bcity%5D=Pune";
+  function loadLiveAQI(){
+    fetch(AQI_API).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+      var recs=(d&&d.records)||[];if(!recs.length)throw 0;
+      var by={};
+      recs.forEach(function(r){var s=r.station;if(!s)return;if(!by[s])by[s]={name:s.replace(/,\s*Pune.*$/,""),lat:parseFloat(r.latitude),lng:parseFloat(r.longitude),upd:r.last_update,pol:{}};var v=parseFloat(r.avg_value);if(!isNaN(v))by[s].pol[r.pollutant_id]=v;});
+      var list=Object.keys(by).map(function(k){var o=by[k],best=null,dom=null;["PM2.5","PM10","NO2","OZONE"].forEach(function(p){var si=subIndex(p,o.pol[p]);if(si!=null&&(best==null||si>best)){best=si;dom=p;}});o.aqi=best;o.dom=dom;return o;}).filter(function(o){return o.aqi!=null&&!isNaN(o.lat)&&!isNaN(o.lng);});
+      if(!list.length)throw 0;
+      renderAQI(list,true);
+    }).catch(function(){renderAQI(aqiFallback,false);});
+  }
+  loadLiveAQI();
+
   flood.forEach(function(s){var m=L.marker([s.lat,s.lng]);m.bindPopup("<b>"+(isMr()?s.mr:s.n)+"</b><br>"+(isMr()?"पूरप्रवण भाग":"flood-prone area"));floodLayer.addLayer(m)});
-  aqiLayer.addTo(map);
 
   var bands=[["0–50","#2e9e5b"],["51–100","#a3c83a"],["101–200","#e8b117"],["201–300","#e2590b"],["301+","#c0392b"]];
   function showLegend(on){document.getElementById("legend").innerHTML = on?bands.map(function(b){return "<span><i class='dot' style='background:"+b[1]+"'></i>AQI "+b[0]+"</span>"}).join(""):"<span>🌊 "+(isMr()?"पूरप्रवण सखल भाग — मुळा-मुठेकाठी":"Flood-prone low-lying areas along the Mutha")+"</span>"}

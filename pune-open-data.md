@@ -99,5 +99,29 @@ Recent PM2.5 ~29 ug/m3. WARNING source: aqi.in (third-party aggregator), NOT off
 - Tree census 2019 (4.09M, geo-located, ward, management) · Jal Dharohar water-bodies census · Pune Libraries
 **Other portals:** opendata.pmc.gov.in / opendata.punecorporation.org (PMC Open Data Store), smartcities.data.gov.in/cities/Pune, DataMeet `Pune_wards` (GeoJSON boundaries), OpenStreetMap.
 
+## Unique / high-value finds
+
+### Dam water levels (Pune's water security) — LIVE-ready ⭐
+- Pune drinking water comes from the **Khadakwasla cluster**: Khadakwasla + Panshet + Varasgaon + Temghar.
+- Cluster live-storage capacity **29.15 TMC**; as of **June 2026 ~4.13 TMC ≈ 14.2%** (pre-monsoon low → water-management directives).
+- Pune region total live storage ~77.02 TMC; demand ~4 TMC (Pune) + 1.5 TMC (PCMC).
+- Updated daily by **WRD Maharashtra** (also mirrored at numerical.co.in). Excellent live gauge — especially Mar–Jun. verify exact daily figure at use-time.
+
+### Flood-risk zones — high-impact map layer ⭐
+- Recurring flood-prone localities: **Sinhagad Road (Ekta Nagar/Ekta Nagari, Vitthalwadi, Nimbaj Nagar), Bavdhan, Baner, Deccan Gymkhana** — low-lying, along the Mutha.
+- Driven by **Khadakwasla dam water release + heavy rain**; 2024 inundated 150+ homes (Army/NDRF deployed; CM ordered flood-protection wall). 2019 Ambil Odha cloudburst killed 19+.
+- **Blue flood line** = level expected over 25 years (re-survey planned); **red flood line** = higher return period. Good explainer + risk-map overlay.
+
+### Water bodies (Jal Dharohar census)
+- India's first Water Bodies Census (Ministry of Jal Shakti, 2018-19, released 2023). Machine-readable **OpenCity "Maharashtra Water Bodies Census"** (incl. Pune) — lakes/wells/tanks. Pune-specific counts: verify in dataset.
+- ✅ **Official PMC dam-status page found:** pmc.gov.in/en/b/current-status-dams-pune-region-2025 — use this as the authoritative source for the dam tile (replaces third-party).
+
+### Road safety
+- 2023: **351** road-accident deaths. 2024: **1,404 accidents, 1,320 injuries, 320 fatalities**. 2025: fatal accidents dipped (Pune Police road-safety report); black spots + night traffic flagged.
+- Traffic police maintain a **"black spots" list** (exact junctions in the police report — not openly mapped; co-improvement with PMC). Useful safety layer once locations obtained.
+
+### Other unique angles worth a future pass
+Heritage structures (PMC heritage list/grades), libraries count, EV-charging & streetlights (Smart City assets), parking, fire incidents, births/deaths (vital stats), PMPML GTFS / Metro real-time feeds, ready-reckoner land rates, open-space per capita.
+
 ## Status
 Thorough paced pass complete across budget, air, trees, facilities, water/sewage, transport, demographics, property tax, grievances, education + dataset inventory. Many series are download-ready (CSV) for deeper charts. Remaining `verify` items flagged inline. Next: wire selected datasets into the dashboard (trend charts + ward choropleth).

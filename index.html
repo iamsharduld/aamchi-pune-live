@@ -3,344 +3,341 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>आमची पुणे · Aamchi Pune Live — City Dashboard (prototype)</title>
-<meta name="description" content="A public-data civic dashboard for Pune — budget, green cover, water, waste, air quality and Smart City delivery. Prototype built on open data.">
+<title>आमची पुणे · Aamchi Pune Live — City Dashboards (prototype)</title>
+<meta name="description" content="Interactive open-data dashboards for Pune — budget, water security, green cover, air quality, mobility and safety. Prototype on public data.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Tiro+Devanagari+Marathi&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
   :root{
-    --ink:#15213b; --ink-soft:#33405f; --paper:#f7f4ec; --card:#ffffff;
-    --slate:#5a6275; --line:#e7e1d4; --line-strong:#d8d1bf;
-    --saffron:#dd5a10; --saffron-soft:#fcefe3; --teal:#0c7a6e; --teal-soft:#e2f1ef;
-    --green:#2e9e5b; --blue:#2b6cb0; --gold:#caa23a;
-    --r:16px; --r-sm:10px; --shadow:0 8px 30px rgba(21,33,59,.09); --shadow-sm:0 2px 8px rgba(21,33,59,.06);
-    --maxw:1180px;
-    --font-display:"Tiro Devanagari Marathi",Georgia,serif;
-    --font-body:"Mukta",system-ui,"Nirmala UI",sans-serif;
+    --ink:#15213b;--ink-soft:#33405f;--paper:#f7f4ec;--card:#ffffff;--slate:#4a5365;--line:#e7e1d4;--line-strong:#d8d1bf;
+    --saffron:#dd5a10;--saffron-soft:#fcefe3;--teal:#0c7a6e;--teal-soft:#e2f1ef;--green:#2e9e5b;--blue:#2b6cb0;--gold:#caa23a;--red:#c0392b;
+    --r:16px;--r-sm:10px;--shadow:0 8px 30px rgba(21,33,59,.09);--shadow-sm:0 2px 8px rgba(21,33,59,.06);--maxw:1180px;
+    --font-display:"Tiro Devanagari Marathi",Georgia,serif;--font-body:"Mukta",system-ui,"Nirmala UI",sans-serif;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:var(--font-body);color:var(--ink);background:
-     radial-gradient(1200px 500px at 80% -10%, #fdebd8 0, transparent 60%),
-     radial-gradient(900px 400px at -10% 0%, #e3f1ef 0, transparent 55%), var(--paper);
-     font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  body{margin:0;font-family:var(--font-body);color:var(--ink);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1200px 500px at 85% -10%,#fdebd8 0,transparent 60%),radial-gradient(900px 400px at -10% 0,#e3f1ef 0,transparent 55%),var(--paper)}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 1.1rem}
   a{color:var(--teal)}
-  .lang-mr{display:none}
-  html[lang="mr"] .lang-mr{display:inline}
-  html[lang="mr"] .lang-en{display:none}
+  .lang-mr{display:none}html[lang="mr"] .lang-mr{display:inline}html[lang="mr"] .lang-en{display:none}
+  :focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 
-  /* header */
-  header.top{position:sticky;top:0;z-index:1000;background:rgba(247,244,236,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-  .top .wrap{display:flex;align-items:center;gap:1rem;min-height:66px;flex-wrap:wrap}
-  .brand{display:flex;align-items:center;gap:.7rem;margin-right:auto}
-  .brand .seal{width:44px;height:44px;border-radius:13px;background:linear-gradient(145deg,var(--ink),#27406e);color:#fff;display:grid;place-items:center;font-family:var(--font-display);font-size:1.5rem;box-shadow:inset 0 0 0 2px rgba(255,255,255,.08)}
-  .brand b{font-family:var(--font-display);font-weight:400;font-size:1.25rem;display:block;line-height:1.05}
-  .brand small{color:var(--slate);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase}
-  .badge{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--saffron);background:var(--saffron-soft);border:1px solid #f1c39e;padding:.25rem .55rem;border-radius:999px}
+  header.top{position:sticky;top:0;z-index:1000;background:rgba(247,244,236,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex;align-items:center;gap:.9rem;min-height:62px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:.6rem;margin-right:auto}
+  .brand .seal{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,var(--ink),#27406e);color:#fff;display:grid;place-items:center;font-family:var(--font-display);font-size:1.4rem}
+  .brand b{font-family:var(--font-display);font-weight:400;font-size:1.2rem;display:block;line-height:1.05}
+  .brand small{color:var(--slate);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+  .badge{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--saffron);background:var(--saffron-soft);border:1px solid #f1c39e;padding:.25rem .55rem;border-radius:999px}
   .langtog{display:inline-flex;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden;background:#fff}
-  .langtog button{border:0;background:transparent;font:inherit;font-size:.82rem;padding:.4rem .8rem;cursor:pointer;color:var(--slate);min-height:40px}
+  .langtog button{border:0;background:transparent;font:inherit;font-size:.82rem;padding:.4rem .8rem;cursor:pointer;color:var(--slate);min-height:38px}
   .langtog button[aria-pressed="true"]{background:var(--ink);color:#fff}
 
-  /* hero */
-  .hero{padding:2.4rem 0 1rem}
-  .hero h1{font-family:var(--font-display);font-weight:400;font-size:clamp(2rem,5.4vw,3.2rem);margin:.2rem 0 .5rem;letter-spacing:.005em}
-  .hero p{color:var(--slate);max-width:62ch;margin:0;font-size:1.05rem}
-  .asof{margin-top:.8rem;font-size:.82rem;color:var(--slate)}
-  .asof b{color:var(--teal)}
+  .secnav{position:sticky;top:62px;z-index:900;background:rgba(247,244,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);overflow-x:auto}
+  .secnav .wrap{display:flex;gap:.4rem;padding-top:.5rem;padding-bottom:.5rem;white-space:nowrap}
+  .secnav a{text-decoration:none;color:var(--ink-soft);font-weight:600;font-size:.86rem;padding:.4rem .8rem;border-radius:999px;border:1px solid transparent}
+  .secnav a:hover{background:#fff;border-color:var(--line)}
 
-  /* KPI */
-  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem;margin:1.6rem 0}
-  @media(min-width:680px){.kpis{grid-template-columns:repeat(3,1fr)}}
-  @media(min-width:980px){.kpis{grid-template-columns:repeat(6,1fr)}}
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow-sm)}
-  .kpi .ic{font-size:1.3rem}
-  .kpi .v{font-family:var(--font-display);font-size:1.7rem;line-height:1.1;margin-top:.2rem}
-  .kpi .l{font-size:.78rem;color:var(--slate);margin-top:.15rem}
-  .kpi .sub{font-size:.72rem;color:var(--slate-soft,#8a91a1);margin-top:.1rem}
+  .hero{padding:2rem 0 .5rem}
+  .hero h1{font-family:var(--font-display);font-weight:400;font-size:clamp(1.9rem,5vw,3rem);margin:.2rem 0 .4rem}
+  .hero p{color:var(--slate);max-width:62ch;margin:0}
+  .asof{margin-top:.6rem;font-size:.82rem;color:var(--slate)}
 
-  section{margin:2.2rem 0}
-  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem}
-  .sec-head h2{font-size:1.35rem;margin:0}
-  .sec-head .note{font-size:.8rem;color:var(--slate)}
-  .tag-live{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);background:#e6effa;border:1px solid #b9d3f0;border-radius:999px;padding:.18rem .5rem}
-  .tag-open{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--green);background:#e4f4ea;border:1px solid #b6e0c4;border-radius:999px;padding:.18rem .5rem}
+  section.dash{margin:2.2rem 0;scroll-margin-top:120px}
+  .dash > h2{font-family:var(--font-display);font-weight:400;font-size:1.6rem;margin:0 0 .2rem}
+  .dash > .sub{color:var(--slate);margin:0 0 1.1rem;font-size:.95rem}
 
-  /* map */
-  #map{height:440px;border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--shadow);z-index:1}
-  .legend{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.7rem;font-size:.8rem;color:var(--slate)}
-  .legend span{display:inline-flex;align-items:center;gap:.35rem}
-  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
-
-  /* cards grid */
   .grid{display:grid;grid-template-columns:1fr;gap:1rem}
-  @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.3rem;box-shadow:var(--shadow-sm)}
-  .card h3{margin:0 0 .2rem;font-size:1.1rem}
-  .card .cap{color:var(--slate);font-size:.85rem;margin:0 0 1rem}
+  @media(min-width:720px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr}}
+  @media(min-width:1000px){.grid.three{grid-template-columns:1fr 1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem;box-shadow:var(--shadow-sm)}
+  .card h3{margin:0 0 .15rem;font-size:1.05rem}
+  .card .cap{color:var(--slate);font-size:.84rem;margin:0 0 1rem}
+  .big{font-family:var(--font-display);font-size:2.1rem;line-height:1}
 
-  /* stacked bar */
-  .stack{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
-  .stack > div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:.78rem;font-weight:700}
-  .legrow{display:flex;gap:1.2rem;margin-top:.8rem;flex-wrap:wrap;font-size:.85rem}
-  .legrow b{font-family:var(--font-display);font-size:1.05rem}
-  .pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
-  .pill{font-size:.78rem;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:.3rem .7rem;color:var(--ink-soft)}
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+  @media(min-width:680px){.kpis{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:1000px){.kpis{grid-template-columns:repeat(6,1fr)}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.9rem 1rem;box-shadow:var(--shadow-sm)}
+  .kpi .ic{font-size:1.2rem}.kpi .v{font-family:var(--font-display);font-size:1.5rem;line-height:1.1;margin-top:.15rem}.kpi .l{font-size:.74rem;color:var(--slate)}
 
-  /* ring */
-  .ringwrap{display:flex;align-items:center;gap:1.3rem}
-  .ring{position:relative;width:128px;height:128px;border-radius:50%;flex:none;
-        background:conic-gradient(var(--c) calc(var(--pct)*3.6deg), var(--track,#eee) 0)}
+  .linechart{width:100%;height:auto}
+  .hbars{display:flex;flex-direction:column;gap:.55rem;margin-top:.4rem}
+  .hbar{display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:.6rem;font-size:.85rem}
+  .hbar .track{background:#eee7d8;border-radius:999px;height:16px;overflow:hidden}
+  .hbar .fill{height:100%;border-radius:999px}
+  .hbar b{font-variant-numeric:tabular-nums}
+  .ring{position:relative;width:130px;height:130px;border-radius:50%;flex:none;background:conic-gradient(var(--c) calc(var(--pct)*3.6deg),var(--track,#eee) 0)}
   .ring::after{content:"";position:absolute;inset:15px;background:var(--card);border-radius:50%}
   .ring .rv{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:1.7rem}
-  .ring-meta b{font-family:var(--font-display);font-size:1.5rem;display:block}
-  .ring-meta span{color:var(--slate);font-size:.85rem}
+  .ringwrap{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+  .ring-meta b{font-family:var(--font-display);font-size:1.3rem;display:block}.ring-meta span{color:var(--slate);font-size:.84rem}
+  .gaugecap{font-size:.84rem;color:var(--slate);margin-top:.5rem}
+  .pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem}
+  .pill{font-size:.76rem;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:.28rem .65rem;color:var(--ink-soft)}
+  .legend{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.6rem;font-size:.8rem;color:var(--slate)}
+  .legend span{display:inline-flex;align-items:center;gap:.35rem}.dot{width:11px;height:11px;border-radius:50%}
+  #map{height:420px;border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--shadow);z-index:1}
+  .maptabs{display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap}
+  .maptabs button{font:inherit;font-size:.82rem;font-weight:600;padding:.4rem .8rem;border-radius:999px;border:1px solid var(--line-strong);background:#fff;cursor:pointer;color:var(--slate)}
+  .maptabs button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:transparent}
+  .tag-live{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);background:#e6effa;border:1px solid #b9d3f0;border-radius:999px;padding:.16rem .5rem}
+  .conf{font-size:.66rem;font-weight:700;text-transform:uppercase;border-radius:999px;padding:.14rem .45rem;border:1px solid}
+  .conf.high{color:var(--green);background:#e4f4ea;border-color:#b6e0c4}
+  .conf.med{color:#8a6d00;background:#fbf3da;border-color:#e6cf8a}
+  .conf.low{color:var(--red);background:#fbe3e3;border-color:#e6b3b3}
 
-  .treebar{height:14px;border-radius:999px;background:#e9e4d6;overflow:hidden;margin-top:.5rem}
-  .treebar > i{display:block;height:100%;width:80%;background:linear-gradient(90deg,var(--green),#7bc89a)}
-
-  /* sources table */
-  table.src{width:100%;border-collapse:collapse;font-size:.86rem;background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm)}
-  table.src th,table.src td{padding:.6rem .7rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-  table.src th{background:var(--paper);font-size:.74rem;text-transform:uppercase;letter-spacing:.03em;color:var(--slate)}
+  table.src{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm)}
+  table.src th,table.src td{padding:.55rem .7rem;border-bottom:1px solid var(--line);text-align:left}
+  table.src th{background:var(--paper);font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;color:var(--slate)}
   table.src tr:last-child td{border-bottom:0}
-
-  footer{border-top:1px solid var(--line);margin-top:2.5rem;padding:1.6rem 0 2.4rem;color:var(--slate);font-size:.85rem}
-  .disc{background:#fff7e8;border:1px solid #f0c879;color:#7a5200;border-radius:var(--r);padding:.9rem 1.1rem;font-size:.86rem;margin-top:1rem}
-  :focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+  .disc{background:#fff7e8;border:1px solid #f0c879;color:#7a5200;border-radius:var(--r);padding:.9rem 1.1rem;font-size:.85rem;margin-top:1.4rem}
+  footer{border-top:1px solid var(--line);margin-top:2rem;padding:1.6rem 0 2.4rem;color:var(--slate);font-size:.85rem}
+  .aqi-tt{background:transparent;border:0;box-shadow:none;color:#fff;font-weight:800;font-size:.7rem;text-shadow:0 1px 2px rgba(0,0,0,.55)}.aqi-tt::before{display:none}
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="wrap">
-    <div class="brand">
-      <div class="seal" aria-hidden="true">पु</div>
-      <div>
-        <b><span class="lang-en">Aamchi Pune Live</span><span class="lang-mr">आमची पुणे लाइव्ह</span></b>
-        <small><span class="lang-en">City civic dashboard</span><span class="lang-mr">शहर नागरी डॅशबोर्ड</span></small>
-      </div>
-    </div>
-    <span class="badge"><span class="lang-en">Prototype · open data</span><span class="lang-mr">प्रारूप · खुला डेटा</span></span>
-    <div class="langtog" role="group" aria-label="Language">
-      <button data-lang="en" aria-pressed="true">EN</button>
-      <button data-lang="mr" aria-pressed="false" lang="mr">मराठी</button>
-    </div>
-  </div>
-</header>
+<header class="top"><div class="wrap">
+  <div class="brand"><div class="seal" aria-hidden="true">पु</div>
+    <div><b><span class="lang-en">Aamchi Pune Live</span><span class="lang-mr">आमची पुणे लाइव्ह</span></b>
+      <small><span class="lang-en">City data dashboards</span><span class="lang-mr">शहर डेटा डॅशबोर्ड</span></small></div></div>
+  <span class="badge"><span class="lang-en">Prototype · open data</span><span class="lang-mr">प्रारूप · खुला डेटा</span></span>
+  <div class="langtog" role="group" aria-label="Language"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="mr" aria-pressed="false" lang="mr">मराठी</button></div>
+</div></header>
+
+<nav class="secnav"><div class="wrap">
+  <a href="#overview"><span class="lang-en">Overview</span><span class="lang-mr">आढावा</span></a>
+  <a href="#money"><span class="lang-en">Money</span><span class="lang-mr">पैसा</span></a>
+  <a href="#water"><span class="lang-en">Water security</span><span class="lang-mr">पाणी</span></a>
+  <a href="#green"><span class="lang-en">Green cover</span><span class="lang-mr">हरित आच्छादन</span></a>
+  <a href="#air"><span class="lang-en">Air &amp; map</span><span class="lang-mr">हवा व नकाशा</span></a>
+  <a href="#mobility"><span class="lang-en">Mobility</span><span class="lang-mr">वाहतूक</span></a>
+  <a href="#safety"><span class="lang-en">Safety &amp; delivery</span><span class="lang-mr">सुरक्षा</span></a>
+</div></nav>
 
 <main class="wrap">
-  <section class="hero">
+  <section class="hero" id="overview">
     <h1><span class="lang-en">The pulse of Pune, in the open</span><span class="lang-mr">पुण्याची नाडी, खुलेपणाने</span></h1>
-    <p>
-      <span class="lang-en">A public-data dashboard bringing Pune's civic numbers — budget, green cover, water, waste, air quality and Smart City delivery — into one clear, citizen-friendly view. Built entirely on openly published data.</span>
-      <span class="lang-mr">पुण्याचे नागरी आकडे — अर्थसंकल्प, वृक्षसंपदा, पाणी, कचरा, हवेची गुणवत्ता आणि स्मार्ट सिटी कामगिरी — एकाच स्पष्ट, नागरिकस्नेही ठिकाणी आणणारा डॅशबोर्ड. पूर्णपणे सार्वजनिक डेटावर आधारित.</span>
-    </p>
-    <div class="asof">
-      <span class="lang-en">Data as of</span><span class="lang-mr">डेटा दिनांक</span>
-      <b id="asof">2025-26 / 2024</b> ·
-      <span class="lang-en">sources listed below</span><span class="lang-mr">स्रोत खाली दिले आहेत</span>
+    <p><span class="lang-en">Interactive dashboards built entirely on Pune's openly published data — money, water, green cover, air, mobility and safety. Every figure is sourced and confidence-rated.</span>
+       <span class="lang-mr">पुण्याच्या सार्वजनिक डेटावर आधारित परस्परसंवादी डॅशबोर्ड — पैसा, पाणी, हरित आच्छादन, हवा, वाहतूक व सुरक्षा. प्रत्येक आकडा स्रोतासह व विश्वास-श्रेणीसह.</span></p>
+    <div class="asof"><span class="lang-en">Latest figures FY 2026-27 / 2024-25. Cleaned dataset.</span><span class="lang-mr">ताजे आकडे आ.व. २०२६-२७ / २०२४-२५.</span></div>
+  </section>
+
+  <div class="kpis">
+    <div class="kpi"><div class="ic">💰</div><div class="v">₹13,995<small style="font-size:.85rem"> Cr</small></div><div class="l"><span class="lang-en">Budget 2026-27</span><span class="lang-mr">अर्थसंकल्प</span></div></div>
+    <div class="kpi"><div class="ic">💧</div><div class="v">14%</div><div class="l"><span class="lang-en">Dam storage (Jun)</span><span class="lang-mr">धरण साठा</span></div></div>
+    <div class="kpi"><div class="ic">🌳</div><div class="v">40.9<small style="font-size:.85rem"> L</small></div><div class="l"><span class="lang-en">Trees</span><span class="lang-mr">वृक्ष</span></div></div>
+    <div class="kpi"><div class="ic">🗺️</div><div class="v">516<small style="font-size:.85rem"> km²</small></div><div class="l"><span class="lang-en">PMC area</span><span class="lang-mr">क्षेत्रफळ</span></div></div>
+    <div class="kpi"><div class="ic">🚌</div><div class="v">~13<small style="font-size:.85rem"> L</small></div><div class="l"><span class="lang-en">Bus riders/day</span><span class="lang-mr">बस प्रवासी</span></div></div>
+    <div class="kpi"><div class="ic">🧑‍🤝‍🧑</div><div class="v">~46<small style="font-size:.85rem"> L</small></div><div class="l"><span class="lang-en">Population (est.)</span><span class="lang-mr">लोकसंख्या</span></div></div>
+  </div>
+
+  <section class="dash" id="money">
+    <h2><span class="lang-en">Money</span><span class="lang-mr">पैसा</span></h2>
+    <p class="sub"><span class="lang-en">How the city budgets, and how much it actually collects.</span><span class="lang-mr">शहर किती अर्थसंकल्प करते आणि प्रत्यक्षात किती जमा करते.</span></p>
+    <div class="grid two">
+      <div class="card">
+        <h3><span class="lang-en">Budget growth</span><span class="lang-mr">अर्थसंकल्प वाढ</span></h3>
+        <p class="cap"><span class="lang-en">₹ crore, FY 2021-22 → 2026-27 · +83% in 5 years</span><span class="lang-mr">₹ कोटी · ५ वर्षांत +८३%</span></p>
+        <svg class="linechart" viewBox="0 0 600 250" role="img" aria-label="Budget trend 2021-22 to 2026-27">
+          <polyline fill="rgba(12,122,110,.12)" stroke="none" points="40,204 144,182 248,160 352,110 456,85 560,52 560,220 40,220"/>
+          <polyline fill="none" stroke="#0c7a6e" stroke-width="3" points="40,204 144,182 248,160 352,110 456,85 560,52"/>
+          <g font-size="11" fill="#4a5365" text-anchor="middle"><text x="40" y="238">21-22</text><text x="144" y="238">22-23</text><text x="248" y="238">23-24</text><text x="352" y="238">24-25</text><text x="456" y="238">25-26</text><text x="560" y="238">26-27</text></g>
+          <g font-size="11" font-weight="700" fill="#15213b" text-anchor="middle"><text x="40" y="196">7,650</text><text x="248" y="152">9,515</text><text x="540" y="44">13,995</text></g>
+          <g fill="#0c7a6e"><circle cx="40" cy="204" r="3.5"/><circle cx="144" cy="182" r="3.5"/><circle cx="248" cy="160" r="3.5"/><circle cx="352" cy="110" r="3.5"/><circle cx="456" cy="85" r="3.5"/><circle cx="560" cy="52" r="4.5"/></g>
+        </svg>
+      </div>
+      <div class="card">
+        <h3><span class="lang-en">Where 2026-27 money goes</span><span class="lang-mr">पैसा कुठे जातो (२०२६-२७)</span></h3>
+        <p class="cap"><span class="lang-en">Top department allocations (₹ crore)</span><span class="lang-mr">प्रमुख विभाग तरतूद (₹ कोटी)</span></p>
+        <div class="hbars">
+          <div class="hbar"><span><span class="lang-en">Water supply</span><span class="lang-mr">पाणीपुरवठा</span></span><span class="track"><span class="fill" style="width:100%;background:var(--blue)"></span></span><b>2,077</b></div>
+          <div class="hbar"><span><span class="lang-en">Roads</span><span class="lang-mr">रस्ते</span></span><span class="track"><span class="fill" style="width:90%;background:var(--saffron)"></span></span><b>1,866</b></div>
+          <div class="hbar"><span><span class="lang-en">Solid waste</span><span class="lang-mr">घनकचरा</span></span><span class="track"><span class="fill" style="width:67%;background:var(--green)"></span></span><b>1,390</b></div>
+        </div>
+        <h3 style="margin-top:1.2rem"><span class="lang-en">Property tax: collected vs target</span><span class="lang-mr">मालमत्ता कर: वसुली वि. लक्ष्य</span></h3>
+        <p class="cap">FY 2024-25 · ~12.5 <span class="lang-en">lakh properties</span><span class="lang-mr">लाख मालमत्ता</span></p>
+        <div class="hbars">
+          <div class="hbar"><span><span class="lang-en">Collected</span><span class="lang-mr">वसूल</span></span><span class="track"><span class="fill" style="width:83%;background:var(--teal)"></span></span><b>₹2,365</b></div>
+          <div class="hbar"><span><span class="lang-en">Target</span><span class="lang-mr">लक्ष्य</span></span><span class="track"><span class="fill" style="width:100%;background:#cdd5e0"></span></span><b>₹2,847</b></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="kpis" aria-label="Key indicators">
-    <div class="kpi"><div class="ic">💰</div><div class="v">₹12,618<small style="font-size:.9rem"> Cr</small></div><div class="l"><span class="lang-en">Annual budget 2025-26</span><span class="lang-mr">वार्षिक अर्थसंकल्प २०२५-२६</span></div></div>
-    <div class="kpi"><div class="ic">🌳</div><div class="v">40.9 <small style="font-size:.9rem">lakh</small></div><div class="l"><span class="lang-en">Trees (427 species)</span><span class="lang-mr">वृक्ष (४२७ प्रजाती)</span></div></div>
-    <div class="kpi"><div class="ic">💧</div><div class="v">866 <small style="font-size:.9rem">MLD</small></div><div class="l"><span class="lang-en">Water supplied / day</span><span class="lang-mr">रोज पाणीपुरवठा</span></div></div>
-    <div class="kpi"><div class="ic">♻️</div><div class="v">2,258 <small style="font-size:.9rem">TPD</small></div><div class="l"><span class="lang-en">Waste handled / day</span><span class="lang-mr">रोज कचरा</span></div></div>
-    <div class="kpi"><div class="ic">🏗️</div><div class="v">55</div><div class="l"><span class="lang-en">Smart City projects (₹3,333 Cr)</span><span class="lang-mr">स्मार्ट सिटी प्रकल्प (₹३,३३३ कोटी)</span></div></div>
-    <div class="kpi"><div class="ic">🏛️</div><div class="v">15</div><div class="l"><span class="lang-en">Ward divisions</span><span class="lang-mr">क्षेत्रीय कार्यालये</span></div></div>
+  <section class="dash" id="water">
+    <h2><span class="lang-en">Water security</span><span class="lang-mr">पाणी सुरक्षा</span></h2>
+    <p class="sub"><span class="lang-en">Pune's most pressing number right now — and the river-pollution gap.</span><span class="lang-mr">सध्याचा सर्वात महत्त्वाचा आकडा — आणि नदी-प्रदूषणाची तफावत.</span></p>
+    <div class="grid two">
+      <div class="card">
+        <h3><span class="lang-en">Dam storage</span><span class="lang-mr">धरण साठा</span> <span class="tag-live">live</span></h3>
+        <p class="cap"><span class="lang-en">Khadakwasla cluster (Khadakwasla+Panshet+Varasgaon+Temghar), Jun 2026</span><span class="lang-mr">खडकवासला समूह, जून २०२६</span></p>
+        <div class="ringwrap">
+          <div class="ring" style="--pct:14;--c:var(--red);--track:#f6e2df"><span class="rv" style="color:var(--red)">14%</span></div>
+          <div class="ring-meta"><b>4.13 / 29.15 TMC</b><span class="lang-en">live storage (pre-monsoon low)</span><span class="lang-mr">पावसाळ्यापूर्वी कमी साठा</span></div>
+        </div>
+        <p class="gaugecap"><span class="lang-en">Updates daily — would pull from PMC's official dam-status page.</span><span class="lang-mr">रोज बदलते — पीएमसीच्या अधिकृत पानावरून घेतले जाईल.</span></p>
+      </div>
+      <div class="card">
+        <h3><span class="lang-en">Supplied vs treated</span><span class="lang-mr">पुरवठा वि. प्रक्रिया</span></h3>
+        <p class="cap"><span class="lang-en">The untreated gap flows to the Mula-Mutha. JICA/PARMM is closing it.</span><span class="lang-mr">प्रक्रिया न झालेले पाणी मुळा-मुठेत जाते. JICA/PARMM ती भरून काढत आहे.</span></p>
+        <div class="hbars">
+          <div class="hbar"><span><span class="lang-en">Water supplied</span><span class="lang-mr">पाणीपुरवठा</span></span><span class="track"><span class="fill" style="width:99%;background:var(--blue)"></span></span><b>866</b></div>
+          <div class="hbar"><span><span class="lang-en">Treatment now</span><span class="lang-mr">सध्या प्रक्रिया</span></span><span class="track"><span class="fill" style="width:55%;background:var(--saffron)"></span></span><b>477</b></div>
+          <div class="hbar"><span><span class="lang-en">Target</span><span class="lang-mr">लक्ष्य</span></span><span class="track"><span class="fill" style="width:100%;background:var(--green)"></span></span><b>873</b></div>
+        </div>
+        <div class="pills"><span class="pill">MLD</span><span class="pill">🚱 +396 MLD <span class="lang-en">via 11 new STPs</span><span class="lang-mr">११ नवीन STP</span></span><span class="pill">🇯🇵 JICA</span></div>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <div class="sec-head">
-      <h2><span class="lang-en">Air quality across Pune</span><span class="lang-mr">पुण्यातील हवेची गुणवत्ता</span></h2>
-      <span class="tag-live"><span class="lang-en">Live-feed ready · sample shown</span><span class="lang-mr">थेट-फीड सज्ज · नमुना</span></span>
+  <section class="dash" id="green">
+    <h2><span class="lang-en">Green cover</span><span class="lang-mr">हरित आच्छादन</span></h2>
+    <p class="sub"><span class="lang-en">From the 2019 GIS tree census — all 40.9 lakh trees geo-tagged.</span><span class="lang-mr">२०१९ जीआयएस वृक्षगणना — ४०.९ लाख झाडे जिओ-टॅग.</span></p>
+    <div class="grid three">
+      <div class="card">
+        <h3><span class="lang-en">Few species dominate</span><span class="lang-mr">मोजक्या प्रजातींचे वर्चस्व</span></h3>
+        <p class="cap">427 <span class="lang-en">species, but…</span><span class="lang-mr">प्रजाती, पण…</span></p>
+        <div class="ringwrap"><div class="ring" style="--pct:47;--c:var(--green);--track:#e4f4ea"><span class="rv" style="font-size:1.3rem">47%</span></div>
+          <div class="ring-meta"><span class="lang-en">are just the</span><span class="lang-mr">फक्त</span> <b><span class="lang-en">top 3 species</span><span class="lang-mr">पहिल्या ३ प्रजाती</span></b><span class="lang-en">— all non-native</span><span class="lang-mr">— सर्व परदेशी</span></div></div>
+        <p class="gaugecap">Giripushpa · Subabul · African Blackwood. 80% <span class="lang-en">from 30 species.</span><span class="lang-mr">३० प्रजातींतून.</span></p>
+      </div>
+      <div class="card">
+        <h3><span class="lang-en">Native vs non-native</span><span class="lang-mr">देशी वि. परदेशी</span></h3>
+        <p class="cap"><span class="lang-en">Among the top 10 species by count</span><span class="lang-mr">पहिल्या १० प्रजातींत</span></p>
+        <div class="hbars">
+          <div class="hbar"><span><span class="lang-en">Non-native</span><span class="lang-mr">परदेशी</span></span><span class="track"><span class="fill" style="width:60%;background:var(--saffron)"></span></span><b>6</b></div>
+          <div class="hbar"><span><span class="lang-en">Native</span><span class="lang-mr">देशी</span></span><span class="track"><span class="fill" style="width:40%;background:var(--green)"></span></span><b>4</b></div>
+        </div>
+        <p class="gaugecap"><span class="lang-en">Native: Mango, Babul, Neem, False Ashoka.</span><span class="lang-mr">देशी: आंबा, बाभूळ, कडुनिंब, अशोक.</span></p>
+      </div>
+      <div class="card">
+        <h3><span class="lang-en">Greenest wards</span><span class="lang-mr">सर्वाधिक हिरवे प्रभाग</span></h3>
+        <p class="cap"><span class="lang-en">Tree count (lakh)</span><span class="lang-mr">वृक्ष संख्या (लाख)</span></p>
+        <div class="hbars">
+          <div class="hbar"><span>Ward 53 · Taljai</span><span class="track"><span class="fill" style="width:100%;background:var(--green)"></span></span><b>7.71</b></div>
+          <div class="hbar"><span>Ward 20 · ARAI</span><span class="track"><span class="fill" style="width:29%;background:var(--green)"></span></span><b>2.24</b></div>
+          <div class="hbar"><span><span class="lang-en">Median ward</span><span class="lang-mr">सरासरी</span></span><span class="track"><span class="fill" style="width:3%;background:#bcd9c6"></span></span><b>0.23</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dash" id="air">
+    <h2><span class="lang-en">Air quality &amp; city map</span><span class="lang-mr">हवेची गुणवत्ता व नकाशा</span></h2>
+    <p class="sub"><span class="lang-en">Toggle layers: air-quality monitoring localities and flood-prone areas.</span><span class="lang-mr">थर बदला: हवा निरीक्षण ठिकाणे आणि पूरप्रवण भाग.</span></p>
+    <div class="maptabs">
+      <button id="t-aqi" aria-pressed="true"><span class="lang-en">🌫️ Air quality</span><span class="lang-mr">🌫️ हवा</span></button>
+      <button id="t-flood" aria-pressed="false"><span class="lang-en">🌊 Flood-prone</span><span class="lang-mr">🌊 पूरप्रवण</span></button>
+      <span class="tag-live" style="align-self:center"><span class="lang-en">AQI: sample · live-ready</span><span class="lang-mr">AQI: नमुना</span></span>
     </div>
     <div id="map"></div>
     <div class="legend" id="legend"></div>
-    <p class="sec-head note" style="margin-top:.6rem">
-      <span class="lang-en">Marker positions are real SAFAR/CPCB monitoring localities; the AQI values shown are illustrative samples. Wiring the live SAFAR/CPCB feed makes this real-time.</span>
-      <span class="lang-mr">खुणा SAFAR/CPCB निरीक्षण ठिकाणे आहेत; दाखवलेले AQI आकडे केवळ नमुना आहेत. थेट SAFAR/CPCB फीड जोडल्यास हे रिअल-टाइम होईल.</span>
-    </p>
   </section>
 
-  <section>
-    <div class="sec-head"><h2><span class="lang-en">How the city spends & delivers</span><span class="lang-mr">शहर कसे खर्च करते व काम करते</span></h2>
-      <span class="tag-open"><span class="lang-en">Open data</span><span class="lang-mr">खुला डेटा</span></span></div>
-    <div class="grid">
-
-      <div class="card">
-        <h3><span class="lang-en">Budget 2025-26 — ₹12,618 Cr</span><span class="lang-mr">अर्थसंकल्प २०२५-२६ — ₹१२,६१८ कोटी</span></h3>
-        <p class="cap"><span class="lang-en">No tax hike. Split of total outlay:</span><span class="lang-mr">करवाढ नाही. एकूण तरतुदीचे विभाजन:</span></p>
-        <div class="stack">
-          <div style="width:56.2%;background:var(--teal)">56%</div>
-          <div style="width:43.8%;background:var(--saffron)">44%</div>
+  <section class="dash" id="mobility">
+    <h2><span class="lang-en">Mobility</span><span class="lang-mr">वाहतूक</span></h2>
+    <p class="sub"><span class="lang-en">A young Metro alongside the city's bus backbone.</span><span class="lang-mr">तरुण मेट्रो आणि शहराची बस यंत्रणा.</span></p>
+    <div class="grid two">
+      <div class="card"><h3>🚇 <span class="lang-en">Pune Metro</span><span class="lang-mr">पुणे मेट्रो</span></h3>
+        <p class="cap">FY 2025-26</p>
+        <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+          <div class="kpi"><div class="v">32.97</div><div class="l">km</div></div>
+          <div class="kpi"><div class="v">28</div><div class="l"><span class="lang-en">stations</span><span class="lang-mr">स्थानके</span></div></div>
+          <div class="kpi"><div class="v">2.2<small style="font-size:.8rem">L</small></div><div class="l"><span class="lang-en">riders/day</span><span class="lang-mr">प्रवासी</span></div></div>
         </div>
-        <div class="legrow">
-          <span><span class="dot" style="background:var(--teal)"></span> <span class="lang-en">Revenue</span><span class="lang-mr">महसुली</span> <b>₹7,093 Cr</b></span>
-          <span><span class="dot" style="background:var(--saffron)"></span> <span class="lang-en">Capital works</span><span class="lang-mr">भांडवली</span> <b>₹5,524 Cr</b></span>
-        </div>
-        <div class="pills">
-          <span class="pill">🛣️ <span class="lang-en">33 major roads</span><span class="lang-mr">३३ प्रमुख रस्ते</span></span>
-          <span class="pill">🏘️ <span class="lang-en">₹623 Cr merged villages</span><span class="lang-mr">₹६२३ कोटी समाविष्ट गावे</span></span>
-          <span class="pill">🚇 <span class="lang-en">Metro expansion</span><span class="lang-mr">मेट्रो विस्तार</span></span>
-        </div>
+        <p class="gaugecap"><span class="lang-en">7.08 crore riders &amp; ₹110 Cr revenue in FY25-26; Line 3 + 44 stations under construction.</span><span class="lang-mr">आ.व. २५-२६ मध्ये ७.०८ कोटी प्रवासी; मार्गिका ३ बांधकामात.</span></p>
       </div>
-
-      <div class="card">
-        <h3><span class="lang-en">Waste segregation</span><span class="lang-mr">कचरा वर्गीकरण</span></h3>
-        <p class="cap"><span class="lang-en">Of ~2,258 tonnes handled every day</span><span class="lang-mr">रोज हाताळल्या जाणाऱ्या ~२,२५८ टनांपैकी</span></p>
-        <div class="ringwrap">
-          <div class="ring" style="--pct:95;--c:var(--green);--track:#e4f4ea"><span class="rv">95%</span></div>
-          <div class="ring-meta">
-            <b>2,258 TPD</b><span class="lang-en">handled daily</span><span class="lang-mr">रोज हाताळणी</span><br><br>
-            <b style="color:var(--green)">95%</b><span class="lang-en">source segregation</span><span class="lang-mr">स्रोत वर्गीकरण</span>
-          </div>
+      <div class="card"><h3>🚌 <span class="lang-en">PMPML buses</span><span class="lang-mr">पीएमपीएमएल बस</span></h3>
+        <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
+          <div class="kpi"><div class="v">1,584</div><div class="l"><span class="lang-en">buses</span><span class="lang-mr">बस</span></div></div>
+          <div class="kpi"><div class="v">~13<small style="font-size:.8rem">L</small></div><div class="l"><span class="lang-en">riders/day</span><span class="lang-mr">प्रवासी</span></div></div>
         </div>
+        <p class="gaugecap"><span class="lang-en">+2,500 new buses planned by 2026 → target ~18-20 lakh riders/day.</span><span class="lang-mr">२०२६ पर्यंत +२,५०० बस → ~१८-२० लाख प्रवासी/दिवस लक्ष्य.</span></p>
       </div>
-
-      <div class="card">
-        <h3><span class="lang-en">Smart City delivery</span><span class="lang-mr">स्मार्ट सिटी कामगिरी</span></h3>
-        <p class="cap"><span class="lang-en">Mission concluded March 2025</span><span class="lang-mr">मिशन मार्च २०२५ मध्ये पूर्ण</span></p>
-        <div class="ringwrap">
-          <div class="ring" style="--pct:100;--c:var(--blue);--track:#e6effa"><span class="rv">100%</span></div>
-          <div class="ring-meta">
-            <b>55</b><span class="lang-en">projects completed</span><span class="lang-mr">प्रकल्प पूर्ण</span><br><br>
-            <b style="color:var(--blue)">₹3,333 Cr</b><span class="lang-en">delivered</span><span class="lang-mr">वितरित</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><span class="lang-en">Green cover</span><span class="lang-mr">वृक्षसंपदा</span></h3>
-        <p class="cap"><span class="lang-en">2019 GIS tree census — every tree geo-tagged</span><span class="lang-mr">२०१९ जीआयएस वृक्षगणना — प्रत्येक झाड जिओ-टॅग</span></p>
-        <div class="legrow">
-          <span><b style="font-family:var(--font-display);font-size:1.8rem">40.9 <span class="lang-en">lakh</span><span class="lang-mr">लाख</span></b> <span class="lang-en">trees</span><span class="lang-mr">झाडे</span></span>
-          <span><b style="font-family:var(--font-display);font-size:1.8rem">427</b> <span class="lang-en">species</span><span class="lang-mr">प्रजाती</span></span>
-        </div>
-        <p class="cap" style="margin:.9rem 0 0"><span class="lang-en">Just 30 species make up 80% of all trees</span><span class="lang-mr">केवळ ३० प्रजाती सर्व झाडांच्या ८०%</span></p>
-        <div class="treebar"><i></i></div>
-      </div>
-
     </div>
   </section>
 
-  <section>
-    <div class="sec-head"><h2><span class="lang-en">Data sources &amp; freshness</span><span class="lang-mr">डेटा स्रोत व अद्ययावतता</span></h2></div>
+  <section class="dash" id="safety">
+    <h2><span class="lang-en">Safety &amp; delivery</span><span class="lang-mr">सुरक्षा व कामगिरी</span></h2>
+    <div class="grid three">
+      <div class="card"><h3>🛟 <span class="lang-en">Road safety</span><span class="lang-mr">रस्ता सुरक्षा</span></h3>
+        <p class="cap">2024</p><div class="big" style="color:var(--red)">320</div>
+        <p class="cap"><span class="lang-en">road-accident deaths (1,404 accidents). Fatalities dipped in 2025.</span><span class="lang-mr">रस्ता अपघात मृत्यू (१,४०४ अपघात). २०२५ मध्ये घट.</span></p>
+      </div>
+      <div class="card"><h3>♻️ <span class="lang-en">Waste segregation</span><span class="lang-mr">कचरा वर्गीकरण</span></h3>
+        <div class="ringwrap"><div class="ring" style="--pct:95;--c:var(--green);--track:#e4f4ea"><span class="rv">95%</span></div>
+          <div class="ring-meta"><b>~2,200 TPD</b><span class="lang-en">handled · via SWaCH pickers</span><span class="lang-mr">हाताळणी · SWaCH मार्फत</span></div></div>
+      </div>
+      <div class="card"><h3>🏗️ <span class="lang-en">Smart City</span><span class="lang-mr">स्मार्ट सिटी</span></h3>
+        <div class="ringwrap"><div class="ring" style="--pct:100;--c:var(--blue);--track:#e6effa"><span class="rv">100%</span></div>
+          <div class="ring-meta"><b>55 · ₹3,333 Cr</b><span class="lang-en">projects delivered</span><span class="lang-mr">प्रकल्प पूर्ण</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dash">
+    <h2><span class="lang-en">Data &amp; confidence</span><span class="lang-mr">डेटा व विश्वास</span></h2>
     <table class="src">
-      <thead><tr>
-        <th><span class="lang-en">Indicator</span><span class="lang-mr">निर्देशक</span></th>
-        <th><span class="lang-en">Source</span><span class="lang-mr">स्रोत</span></th>
-        <th><span class="lang-en">As of</span><span class="lang-mr">दिनांक</span></th>
-        <th><span class="lang-en">Type</span><span class="lang-mr">प्रकार</span></th>
-      </tr></thead>
+      <thead><tr><th><span class="lang-en">Indicator</span><span class="lang-mr">निर्देशक</span></th><th><span class="lang-en">Source</span><span class="lang-mr">स्रोत</span></th><th>As of</th><th>Conf.</th></tr></thead>
       <tbody>
-        <tr><td>Budget ₹12,618 Cr</td><td>PMC Budget 2025-26 (reported)</td><td>2025-26</td><td><span class="tag-open">open</span></td></tr>
-        <tr><td>4.09M trees, 427 species</td><td>PMC GIS Tree Census / opendata.pmc.gov.in</td><td>2019</td><td><span class="tag-open">open</span></td></tr>
-        <tr><td>Water 866 MLD/day</td><td>PMC Water Supply / CSE</td><td>2024</td><td><span class="tag-open">open</span></td></tr>
-        <tr><td>Waste 2,258 TPD, 95% segregation</td><td>PMC Solid Waste Mgmt</td><td>2024</td><td><span class="tag-open">open</span></td></tr>
-        <tr><td>Smart City 55 projects, ₹3,333 Cr</td><td>PSCDCL / Smart Cities Mission</td><td>Mar 2025</td><td><span class="tag-open">open</span></td></tr>
-        <tr><td>Air quality (AQI)</td><td>SAFAR (IITM/IMD) &amp; CPCB stations</td><td>—</td><td><span class="tag-live">live-ready</span></td></tr>
-        <tr><td>Ward map / boundaries</td><td>OpenStreetMap; DataMeet Pune_wards (for choropleth)</td><td>—</td><td><span class="tag-open">open</span></td></tr>
+        <tr><td>Budget ₹13,995 Cr</td><td>PMC Budget 2026-27</td><td>2026-27</td><td><span class="conf high">high</span></td></tr>
+        <tr><td>Dam storage 14%</td><td>PMC dam-status page</td><td>Jun 2026</td><td><span class="conf med">live</span></td></tr>
+        <tr><td>Sewage 477→873 MLD</td><td>PMC PARMM project</td><td>2026</td><td><span class="conf high">high</span></td></tr>
+        <tr><td>Trees 40.9L / 427 sp.</td><td>PMC GIS Census / OpenCity</td><td>2019</td><td><span class="conf high">high</span></td></tr>
+        <tr><td>Property tax ₹2,365 Cr</td><td>PMC Property Tax Dept</td><td>2024-25</td><td><span class="conf high">high</span></td></tr>
+        <tr><td>Metro 32.97 km</td><td>Maha-Metro</td><td>2025</td><td><span class="conf high">high</span></td></tr>
+        <tr><td>Area 516 km²</td><td>Maharashtra Govt (2021 merger)</td><td>2021</td><td><span class="conf high">high</span></td></tr>
+        <tr><td>Air quality AQI</td><td>CPCB / SAFAR (live feed)</td><td>—</td><td><span class="conf low">sample</span></td></tr>
+        <tr><td>Population ~46L</td><td>estimates (no census since 2011)</td><td>2025 est</td><td><span class="conf low">low</span></td></tr>
       </tbody>
     </table>
   </section>
 
-  <div class="disc">
-    <strong>⚠ <span class="lang-en">Prototype.</span><span class="lang-mr">प्रारूप.</span></strong>
-    <span class="lang-en">An independent demonstration built on openly published data to show what a public Pune civic dashboard could look like. Not an official Pune Municipal Corporation product. Figures are compiled from public sources (see table) and may be outdated; AQI values are illustrative samples until a live feed is connected. Verify on official sources before relying on any number.</span>
-    <span class="lang-mr">सार्वजनिक डेटावर आधारित स्वतंत्र प्रात्यक्षिक — पुणे शहराचा सार्वजनिक डॅशबोर्ड कसा असू शकतो हे दाखवण्यासाठी. हे पुणे महानगरपालिकेचे अधिकृत उत्पादन नाही. आकडे सार्वजनिक स्रोतांवरून संकलित; AQI मूल्ये थेट फीड जोडेपर्यंत केवळ नमुना. कोणत्याही आकड्यावर अवलंबून राहण्यापूर्वी अधिकृत स्रोतांवर खात्री करा.</span>
-  </div>
+  <div class="disc"><strong>⚠ <span class="lang-en">Prototype.</span><span class="lang-mr">प्रारूप.</span></strong>
+    <span class="lang-en">An independent, public-interest demo built on openly published data — not an official PMC product. Figures are cleaned and confidence-rated (see table); dam % and AQI are live-ready (sample shown). Verify on official sources before relying on any number.</span>
+    <span class="lang-mr">सार्वजनिक डेटावर आधारित स्वतंत्र प्रात्यक्षिक — पीएमसीचे अधिकृत उत्पादन नाही. आकडे स्वच्छ केलेले व विश्वास-श्रेणीसह; धरण % व AQI थेट-सज्ज (नमुना). अवलंबण्यापूर्वी अधिकृत स्रोतांवर खात्री करा.</span></div>
 </main>
 
-<footer>
-  <div class="wrap">
-    <strong>आमची पुणे · Aamchi Pune Live</strong> —
-    <span class="lang-en">a public-interest prototype. Concept: an open, real-time civic dashboard PMC can adopt.</span>
-    <span class="lang-mr">सार्वजनिक हिताचे प्रारूप. संकल्पना: पीएमसी स्वीकारू शकेल असा खुला, रिअल-टाइम नागरी डॅशबोर्ड.</span>
-  </div>
-</footer>
+<footer><div class="wrap"><strong>आमची पुणे · Aamchi Pune Live</strong> — <span class="lang-en">public-interest prototype · open data · concept for a PMC city dashboard.</span><span class="lang-mr">सार्वजनिक हिताचे प्रारूप · खुला डेटा.</span></div></footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 (function(){
   "use strict";
-  // ---- language toggle ----
-  function setLang(l){
-    document.documentElement.setAttribute("lang", l==="mr"?"mr":"en");
-    document.querySelectorAll(".langtog button").forEach(function(b){
-      b.setAttribute("aria-pressed", String(b.getAttribute("data-lang")===l));
-    });
-    try{localStorage.setItem("apl-lang",l)}catch(e){}
-  }
-  document.querySelectorAll(".langtog button").forEach(function(b){
-    b.addEventListener("click",function(){setLang(b.getAttribute("data-lang"))});
-  });
-  var saved="en"; try{saved=localStorage.getItem("apl-lang")||"en"}catch(e){}
-  setLang(saved);
+  function setLang(l){document.documentElement.setAttribute("lang",l==="mr"?"mr":"en");
+    document.querySelectorAll(".langtog button").forEach(function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-lang")===l))});
+    try{localStorage.setItem("apl-lang",l)}catch(e){}}
+  document.querySelectorAll(".langtog button").forEach(function(b){b.addEventListener("click",function(){setLang(b.getAttribute("data-lang"))})});
+  var sv="en";try{sv=localStorage.getItem("apl-lang")||"en"}catch(e){}setLang(sv);
 
-  // ---- India AQI bands ----
-  function aqiColor(v){
-    if(v<=50) return "#2e9e5b";      // good
-    if(v<=100) return "#a3c83a";     // satisfactory
-    if(v<=200) return "#e8b117";     // moderate
-    if(v<=300) return "#e2590b";     // poor
-    if(v<=400) return "#c0392b";     // very poor
-    return "#7e2a1c";                // severe
-  }
-  function aqiBand(v){
-    if(v<=50) return ["Good","चांगली"];
-    if(v<=100) return ["Satisfactory","समाधानकारक"];
-    if(v<=200) return ["Moderate","मध्यम"];
-    if(v<=300) return ["Poor","वाईट"];
-    if(v<=400) return ["Very Poor","अति वाईट"];
-    return ["Severe","धोकादायक"];
-  }
-
-  // Real SAFAR/CPCB monitoring localities in Pune; AQI values are illustrative samples.
-  var stations=[
-    {n:"Shivajinagar", mr:"शिवाजीनगर", lat:18.530, lng:73.852, aqi:142},
-    {n:"Pashan",       mr:"पाषाण",     lat:18.538, lng:73.806, aqi:88},
-    {n:"Karve Road",   mr:"कर्वे रस्ता",lat:18.503, lng:73.812, aqi:118},
-    {n:"Katraj",       mr:"कात्रज",    lat:18.448, lng:73.858, aqi:96},
-    {n:"Lohegaon",     mr:"लोहगाव",    lat:18.582, lng:73.915, aqi:158},
-    {n:"Hadapsar",     mr:"हडपसर",     lat:18.500, lng:73.941, aqi:134}
-  ];
+  function aqiColor(v){if(v<=50)return"#2e9e5b";if(v<=100)return"#a3c83a";if(v<=200)return"#e8b117";if(v<=300)return"#e2590b";if(v<=400)return"#c0392b";return"#7e2a1c"}
+  var aqi=[{n:"Shivajinagar",mr:"शिवाजीनगर",lat:18.530,lng:73.852,v:142},{n:"Pashan",mr:"पाषाण",lat:18.538,lng:73.806,v:88},
+    {n:"Karve Road",mr:"कर्वे रस्ता",lat:18.503,lng:73.812,v:118},{n:"Katraj",mr:"कात्रज",lat:18.448,lng:73.858,v:96},
+    {n:"Lohegaon",mr:"लोहगाव",lat:18.582,lng:73.915,v:158},{n:"Hadapsar",mr:"हडपसर",lat:18.500,lng:73.941,v:134}];
+  var flood=[{n:"Ekta Nagar (Sinhagad Rd)",mr:"एकता नगर",lat:18.470,lng:73.823},{n:"Bavdhan",mr:"बावधन",lat:18.516,lng:73.775},
+    {n:"Baner",mr:"बाणेर",lat:18.559,lng:73.785},{n:"Deccan Gymkhana",mr:"डेक्कन",lat:18.516,lng:73.841}];
 
   var map=L.map('map',{scrollWheelZoom:false}).setView([18.5204,73.8567],12);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-    attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:19, subdomains:'abcd'
-  }).addTo(map);
-
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
   function isMr(){return document.documentElement.getAttribute("lang")==="mr"}
-  stations.forEach(function(s){
-    var m=L.circleMarker([s.lat,s.lng],{
-      radius:13, color:"#fff", weight:2, fillColor:aqiColor(s.aqi), fillOpacity:.92
-    }).addTo(map);
-    function popup(){
-      var band=aqiBand(s.aqi);
-      return "<b>"+(isMr()?s.mr:s.n)+"</b><br>AQI <b style='color:"+aqiColor(s.aqi)+"'>"+s.aqi+"</b> · "+(isMr()?band[1]:band[0])+
-             "<br><small style='color:#777'>"+(isMr()?"नमुना मूल्य":"sample value")+"</small>";
-    }
-    m.bindPopup(popup());
-    m.bindTooltip(""+s.aqi,{permanent:true,direction:"center",className:"aqi-tt"});
-    document.querySelectorAll(".langtog button").forEach(function(b){
-      b.addEventListener("click",function(){m.setPopupContent(popup())});
-    });
-  });
 
-  // legend
-  var bands=[["0–50","#2e9e5b","Good","चांगली"],["51–100","#a3c83a","Satisfactory","समाधानकारक"],
-    ["101–200","#e8b117","Moderate","मध्यम"],["201–300","#e2590b","Poor","वाईट"],["301+","#c0392b","Very Poor+","अति वाईट+"]];
-  document.getElementById("legend").innerHTML = bands.map(function(b){
-    return "<span><i class='dot' style='background:"+b[1]+"'></i>"+b[0]+"</span>";
-  }).join("");
+  var aqiLayer=L.layerGroup(), floodLayer=L.layerGroup();
+  aqi.forEach(function(s){var m=L.circleMarker([s.lat,s.lng],{radius:13,color:"#fff",weight:2,fillColor:aqiColor(s.v),fillOpacity:.92});
+    m.bindPopup("<b>"+(isMr()?s.mr:s.n)+"</b><br>AQI <b style='color:"+aqiColor(s.v)+"'>"+s.v+"</b> <small style='color:#888'>("+(isMr()?"नमुना":"sample")+")</small>");
+    m.bindTooltip(""+s.v,{permanent:true,direction:"center",className:"aqi-tt"});aqiLayer.addLayer(m)});
+  flood.forEach(function(s){var m=L.marker([s.lat,s.lng]);m.bindPopup("<b>"+(isMr()?s.mr:s.n)+"</b><br>"+(isMr()?"पूरप्रवण भाग":"flood-prone area"));floodLayer.addLayer(m)});
+  aqiLayer.addTo(map);
+
+  var bands=[["0–50","#2e9e5b"],["51–100","#a3c83a"],["101–200","#e8b117"],["201–300","#e2590b"],["301+","#c0392b"]];
+  function showLegend(on){document.getElementById("legend").innerHTML = on?bands.map(function(b){return "<span><i class='dot' style='background:"+b[1]+"'></i>AQI "+b[0]+"</span>"}).join(""):"<span>🌊 "+(isMr()?"पूरप्रवण सखल भाग — मुळा-मुठेकाठी":"Flood-prone low-lying areas along the Mutha")+"</span>"}
+  showLegend(true);
+  var tA=document.getElementById("t-aqi"),tF=document.getElementById("t-flood");
+  tA.addEventListener("click",function(){map.addLayer(aqiLayer);map.removeLayer(floodLayer);tA.setAttribute("aria-pressed","true");tF.setAttribute("aria-pressed","false");showLegend(true)});
+  tF.addEventListener("click",function(){map.addLayer(floodLayer);map.removeLayer(aqiLayer);tF.setAttribute("aria-pressed","true");tA.setAttribute("aria-pressed","false");showLegend(false)});
 })();
 </script>
-<style>
-  .aqi-tt{background:transparent;border:0;box-shadow:none;color:#fff;font-weight:800;font-size:.72rem;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-  .aqi-tt::before{display:none}
-</style>
 </body>
 </html>

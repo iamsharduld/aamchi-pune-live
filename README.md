@@ -9,8 +9,9 @@ quality and Smart City delivery, in one clear, citizen-friendly, bilingual (Engl
 > public-interest demonstration of what an open, real-time city dashboard could look like.
 > Figures are compiled from openly published sources (see the in-page table) and may be outdated.
 > **Air quality is wired to the live CPCB feed via the data.gov.in real-time AQI API** (falls back to
-> sample values if the feed is unavailable). **Dam storage is refreshed daily** by a GitHub Action
-> (`scripts/fetch_dam.py` → `dam.json`) that reads WRD-Maharashtra reservoir figures. Verify on
+> sample values if the feed is unavailable). **Dam storage** is the latest reported figure (in
+> `dam.json`), updated periodically from official sources — there is no reliable free daily API for the
+> Khadakwasla cluster (PMC's page is JavaScript-rendered), so it is **not** an auto-live feed. Verify on
 > official sources before relying on any number.
 
 ## What it shows

@@ -1,44 +1,17 @@
 {
-  "source": "numerical.co.in (mirrors WRD Maharashtra daily reservoir data)",
-  "source_url": "https://numerical.co.in/numerons/collection/5985e2501d6090dc136dc381",
+  "as_of": "2026-06-15",
+  "source": "PMC / Pune news (Jun 2026)",
   "official_reference": "https://www.pmc.gov.in/en/b/current-status-dams-pune-region-2025",
-  "fetched_at": "2026-06-20T05:01:42Z",
+  "note": "Latest reported figure, updated periodically from official sources. No reliable free daily API exists for the Khadakwasla cluster (PMC's status page is JavaScript-rendered), so this is NOT an auto-updating live feed. The pre-monsoon level is critically low.",
   "cluster": {
     "name": "Khadakwasla cluster",
-    "dams_parsed": [
-      "Khadakwasla",
-      "Panshet",
-      "Varasgaon",
-      "Temghar"
-    ],
-    "percent": 99.9,
-    "current_tmc": 29.13,
-    "capacity_tmc": 29.16
-  },
-  "dams": [
-    {
-      "name": "Khadakwasla",
-      "percent": 98.41,
-      "capacity_ml": 55910.0,
-      "current_ml": 55021.0
-    },
-    {
-      "name": "Panshet",
-      "percent": 100.0,
-      "capacity_ml": 301610.0,
-      "current_ml": 301610.0
-    },
-    {
-      "name": "Varasgaon",
-      "percent": 100.0,
-      "capacity_ml": 363130.0,
-      "current_ml": 363130.0
-    },
-    {
-      "name": "Temghar",
-      "percent": 100.0,
-      "capacity_ml": 105010.0,
-      "current_ml": 105010.0
-    }
-  ]
+    "dams": ["Khadakwasla", "Panshet", "Varasgaon", "Temghar"],
+    "percent": 17,
+    "current_tmc": 5.0,
+    "capacity_tmc": 29.15,
+    "status_en": "Critically low",
+    "status_mr": "अत्यंत कमी",
+    "context_en": "Pre-monsoon shortage — PMC began alternate-day water supply on 15 Jun 2026.",
+    "context_mr": "पावसाळ्यापूर्वीची टंचाई — पीएमसीने १५ जून २०२६ पासून एक दिवसाआड पाणीपुरवठा सुरू केला."
+  }
 }

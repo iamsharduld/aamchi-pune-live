@@ -172,13 +172,13 @@
     <p class="sub"><span class="lang-en">Pune's most pressing number right now — and the river-pollution gap.</span><span class="lang-mr">सध्याचा सर्वात महत्त्वाचा आकडा — आणि नदी-प्रदूषणाची तफावत.</span></p>
     <div class="grid two">
       <div class="card">
-        <h3><span class="lang-en">Dam storage</span><span class="lang-mr">धरण साठा</span> <span class="tag-live" style="background:#fbf3da;color:#8a6d00;border-color:#e6cf8a">as of Jun 2026</span></h3>
-        <p class="cap"><span class="lang-en">Khadakwasla cluster (Khadakwasla+Panshet+Varasgaon+Temghar), Jun 2026</span><span class="lang-mr">खडकवासला समूह, जून २०२६</span></p>
+        <h3><span class="lang-en">Dam storage</span><span class="lang-mr">धरण साठा</span> <span class="tag-live" id="dam-status" style="background:#fbf3da;color:#8a6d00;border-color:#e6cf8a">loading…</span></h3>
+        <p class="cap"><span class="lang-en">Khadakwasla cluster — Khadakwasla, Panshet, Varasgaon, Temghar</span><span class="lang-mr">खडकवासला समूह — खडकवासला, पानशेत, वरसगाव, टेमघर</span></p>
         <div class="ringwrap">
-          <div class="ring" style="--pct:14;--c:var(--red);--track:#f6e2df"><span class="rv" style="color:var(--red)">14%</span></div>
-          <div class="ring-meta"><b>4.13 / 29.15 TMC</b><span class="lang-en">live storage (pre-monsoon low)</span><span class="lang-mr">पावसाळ्यापूर्वी कमी साठा</span></div>
+          <div class="ring" id="dam-ring" style="--pct:14;--c:var(--red);--track:#eef0f4"><span class="rv" id="dam-pct">14%</span></div>
+          <div class="ring-meta"><b id="dam-tmc">4.13 / 29.15 TMC</b><span class="lang-en">live storage</span><span class="lang-mr">सध्याचा साठा</span></div>
         </div>
-        <p class="gaugecap"><span class="lang-en">Updates daily — would pull from PMC's official dam-status page.</span><span class="lang-mr">रोज बदलते — पीएमसीच्या अधिकृत पानावरून घेतले जाईल.</span></p>
+        <p class="gaugecap" id="dam-note"><span class="lang-en">Live daily from WRD reservoir data.</span><span class="lang-mr">WRD जलाशय डेटावरून रोज थेट.</span></p>
       </div>
       <div class="card">
         <h3><span class="lang-en">Supplied vs treated</span><span class="lang-mr">पुरवठा वि. प्रक्रिया</span></h3>
@@ -359,6 +359,21 @@
     }).catch(function(){renderAQI(aqiFallback,false);});
   }
   loadLiveAQI();
+
+  // ---- live dam storage (reads dam.json, updated daily by a GitHub Action) ----
+  function damColor(p){return p<20?"#c0392b":p<40?"#e2590b":p<70?"#caa23a":"#2e9e5b";}
+  function loadDam(){
+    fetch("dam.json?_="+Date.now()).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+      var c=d.cluster; if(!c||c.percent==null)throw 0;
+      var p=c.percent, col=damColor(p), day=(d.fetched_at||"").slice(0,10);
+      var ring=document.getElementById("dam-ring"); ring.style.setProperty("--pct",p); ring.style.setProperty("--c",col);
+      var pct=document.getElementById("dam-pct"); pct.textContent=Math.round(p)+"%"; pct.style.color=col;
+      document.getElementById("dam-tmc").textContent=c.current_tmc+" / "+c.capacity_tmc+" TMC";
+      var st=document.getElementById("dam-status"); st.textContent="live · "+day; st.style.background="#e4f4ea"; st.style.color="#0c7a6e"; st.style.borderColor="#b6e0c4";
+      var note=document.getElementById("dam-note"); note.textContent=(isMr()?"WRD जलाशय डेटावरून रोज अद्ययावत · ":"Live daily from WRD reservoir data · ")+day;
+    }).catch(function(){ var st=document.getElementById("dam-status"); if(st) st.textContent="latest known"; });
+  }
+  loadDam();
 
   flood.forEach(function(s){var m=L.marker([s.lat,s.lng]);m.bindPopup("<b>"+(isMr()?s.mr:s.n)+"</b><br>"+(isMr()?"पूरप्रवण भाग":"flood-prone area"));floodLayer.addLayer(m)});
 

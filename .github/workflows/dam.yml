@@ -1,0 +1,43 @@
+name: Update dam storage
+
+# Fetches the Khadakwasla-cluster reservoir storage once a day and commits
+# dam.json, which the site reads (same-origin). The commit to main triggers the
+# normal GitHub Pages branch deploy.
+
+on:
+  schedule:
+    - cron: "30 6 * * *"   # 06:30 UTC = 12:00 IST, daily
+  workflow_dispatch:        # allow manual runs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dam
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch dam storage
+        run: python scripts/fetch_dam.py
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- dam.json; then
+            echo "dam.json unchanged — nothing to commit."
+          else
+            git config user.name "dam-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add dam.json
+            git commit -m "data: update dam storage ($(date -u +%F))"
+            git push
+          fi
